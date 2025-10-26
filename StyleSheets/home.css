@@ -1,0 +1,167 @@
+@font-face {
+    font-family: 'SaranisFont';
+    src: url('../Assets/Saranishandwriting-Regular.otf');
+}
+
+:root {
+    --main-background: #fffcf2;
+    --white: #ffffff;
+    --main-text: #444444;
+    --main-font: 'SaranisFont';
+}
+
+/* body */
+body {
+    background-color: var(--main-background);
+    color: var(--main-text);
+    font-family: var(--main-font);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    padding: 1rem 0 2rem 0;
+    gap: 0;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-top: 0rem;
+    margin-bottom: 0.5rem;
+}
+
+img {
+    width: 30%;
+    height: 30%;
+  }
+
+.frames {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem 1rem; 
+}
+
+.frames img {
+    width: 180px;
+    height: auto;
+}
+
+/* containers */
+.menu-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: top;
+    width: 37.75rem;
+    height: 100vh;
+    gap: 0.75rem;
+    margin-top: 3rem;
+    padding: 0;
+}
+
+/* button styling */
+.button-container {
+    margin-top: 0;
+}
+
+button {
+    color: var(--main-text);
+    font-family: var(--main-font);
+    font-size: 2rem;
+    font-weight: 400;
+    background-color: var(--white);
+    border: 1px solid #1e1e1e;
+    border-radius: 0.5rem;
+    text-align: center;
+    transition: transform 0.2s ease-in-out;
+}
+
+button span {
+    position: relative;
+    top: -2px;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+#select-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 2.8rem;
+    gap: 0.56rem;
+    width: 8rem;
+    height: 3rem;
+    padding: 0.5rem 1rem;
+}
+
+/* frame selectors */
+.clickable-frame {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.clickable-frame:hover {
+    transform: scale(1.02);
+}
+
+.clickable-frame.selected {
+    border: 2px solid #444444;
+    border-radius: 4px;
+}
+
+#menu-camera-button, #menu-upload-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.5rem;
+    gap: 0.56rem;
+    width: 20rem;
+    height: 5rem;
+    padding: 0.5rem 1rem;
+}
+
+/* custom alert box */
+.custom-alert-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.custom-alert-box {
+    background-color: var(--white);
+    border: 2px solid var(--main-text);
+    border-radius: 1rem;
+    padding: 2rem;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.custom-alert-message {
+    font-family: var(--main-font);
+    font-size: 1.8rem;
+    color: var(--main-text);
+    margin: 0 0 1.5rem 0;
+}
+
+.custom-alert-button {
+    width: 6rem;
+    height: 2.5rem;
+    font-size: 1.5rem;
+}
+
+.custom-alert-image {
+    width: 120px;
+    height: auto;
+    margin-bottom: 1rem;
+}
