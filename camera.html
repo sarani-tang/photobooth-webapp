@@ -8,15 +8,15 @@
     </head>
     <body>
         <div class="countdown-timer">3</div>
-        <div class="photobooth-container" id="booth">
-            <video id="live-video" autoplay playsinline></video>
-            <canvas id="final-canvas" width="170" height="100"></canvas>
-        </div>
+        <video id="live-video" autoplay playsinline></video>
+        <canvas id="final-canvas" width="170" height="100"></canvas>
         
         <div class="controls">
             <button id="take-photo"><span>Capture</span></button>
             <button id="ready-button" disabled style="display: none;"><span>Ready</span></button>
         </div>
+
+        <div class="photo-preview-container" id="photo-preview-container"></div>
 
         <script src="Javascripts/camera.js"></script>
     </body>

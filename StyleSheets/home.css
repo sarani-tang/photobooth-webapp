@@ -86,6 +86,11 @@ button:hover {
     transform: scale(1.05);
 }
 
+button:active {
+    background-color: #d3d3d3;
+    transform: scale(0.98);
+}
+
 #select-button {
     display: flex;
     justify-content: center;

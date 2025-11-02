@@ -1,10 +1,25 @@
 
-// dom references
+// dom elements
 const selectedFrame = sessionStorage.getItem('selectedFrame');
-const booth = document.getElementById('booth');
-const uploadBtn = document.getElementById('upload-photo');
-const uploadInput = document.getElementById('upload-photo-input');
+const video = document.getElementById('live-video');
+const captureBtn = document.getElementById('take-photo');
 const readyBtn = document.getElementById('ready-button');
+const countdownEl = document.querySelector('.countdown-timer');
+
+
+if(!selectedFrame) {
+    window.location.href = 'index.html';
+}
+
+let frameImg = '';
+if (selectedFrame === 'Blue Frame') {
+    frameImg = 'Assets/Frames/frame-blue.png';
+} else if (selectedFrame === 'Pink Frame') {
+    frameImg = 'Assets/Frames/frame-pink.png';
+}
+
+let capturedPhotos = [];
+const maxPhotos = 4;
 
 function customAlert(message, imageSrc = null) {
     const overlay = document.createElement('div');
@@ -38,100 +53,87 @@ function customAlert(message, imageSrc = null) {
     document.body.appendChild(overlay);
 }
 
-if(!selectedFrame) {
-    window.location.href = 'index.html';
+async function startCamera() {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+            video: {facingMode: 'user'}
+        });
+        video.srcObject = stream;
+    } catch (error) {
+        console.error('error accessing camera:', error);
+        customAlert('Could not access camera. Please check permissions.');
+    }
 }
 
-let frameImg = '';
-if (selectedFrame === 'Blue Frame') {
-    frameImg = 'Assets/Frames/frame-blue.png';
-} else if (selectedFrame === 'Pink Frame') {
-    frameImg = 'Assets/Frames/frame-pink.png';
-}
+// countdown timer
+const startCountdown = (callback) => {
+    let count = 1; // adjust for testing
+    countdownEl.textContent = count;
+    countdownEl.style.display = 'flex';
+    const intervalId = setInterval(() => {
+        count--;
+        if(count > 0) countdownEl.textContent = count;
+        else {
+            clearInterval(intervalId);
+            countdownEl.textContent = '3';
+            callback();
+        }
+    }, 1000);
+};
 
-console.log('Using frame:', frameImg);
+function capturePhoto() {
+    const canvas = document.getElementById('final-canvas');
+    const context = canvas.getContext('2d');
 
-let uploadedPhotos = [];
-const maxPhotos = 4;
+    //context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
 
-// frame container structure
-function setupBoothDisplay() {
-    booth.innerHTML = '';
+    context.save();
+    context.scale(-1, 1);
+    context.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
+    context.restore();
 
-    const photoSlots = document.createElement('div');
-    photoSlots.className = 'photo-slots';
-    photoSlots.id = 'photo-slots';
+    const imgData = canvas.toDataURL('image/png');
+    capturedPhotos.push(imgData);
 
-    // creating 4 photo slots
-    for (let i = 0; i < maxPhotos; i++) {
-        const slot = document.createElement('div');
-        slot.className = 'photo-slot';
-        slot.id = `photo-slot-${i}`;
-        photoSlots.appendChild(slot);
-    }
+    displayCapturedPhoto(imgData);
 
-    booth.appendChild(photoSlots);
+    console.log(`Photo ${capturedPhotos.length} captured`);
 
-    const frameElement = document.createElement('img');
-    frameElement.src = frameImg;
-    frameElement.alt = selectedFrame;
-    frameElement.className = 'frame-display';
-    booth.appendChild(frameElement);
-}
-
-// displays uploaded photo
-function displayPhoto(imageData) {
-    if(uploadedPhotos.length >= maxPhotos) {
-        return;
-    }
-    
-    const slotIndex = uploadedPhotos.length;
-    const slot = document.getElementById(`photo-slot-${slotIndex}`);
-
-    if (!slot) {
-        console.error('Photo slot not found:', slotIndex);
-        return;
-    }
-
-    const img = document.createElement('img');
-    img.src = imageData;
-    img.className = 'uploaded-photo';
-    slot.appendChild(img);
-
-    uploadedPhotos.push(imageData);
-
-    if(uploadedPhotos.length === maxPhotos) {
+    if (capturedPhotos.length === maxPhotos) {
         readyBtn.style.display = 'block';
         readyBtn.disabled = false;
-        uploadBtn.disabled = true;
-        uploadBtn.style.display = 'none';
-        customAlert('Photobooth frame completed!', 'Assets/Images/silly-cat.jpg');
+        captureBtn.disabled = true;
+        captureBtn.style.display = 'none';
+        customAlert("All Photos captured!", 'Assets/Images/silly-cat.jpg');
     }
 }
 
-if (uploadBtn) {
-    uploadBtn.addEventListener('click', () => {
-        uploadInput.click();
-    });
+function displayCapturedPhoto(imgData) {
+    const container = document.getElementById('photo-preview-container');
+    
+    const img = document.createElement('img');
+    img.src = imgData;
+    img.className = 'preview-photo';
+    img.alt = `Captured photo ${capturedPhotos.length}`;
+    
+    container.appendChild(img);
 }
 
-if (uploadInput) {
-    uploadInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file && file.type.startsWith('image/')) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                displayPhoto(event.target.result);
-            };
-            reader.readAsDataURL(file);
-        }
-        uploadInput.value = '';
+// handler for capture button
+captureBtn.addEventListener('click', () => {
+    captureBtn.disabled = true;
+    startCountdown(() => {
+        capturePhoto();
+        captureBtn.disabled = false;
     });
-}
+});
 
+//handler for ready button
 readyBtn.addEventListener('click', () => {
-    sessionStorage.setItem('uploadedPhotos', JSON.stringify(uploadedPhotos));
+    sessionStorage.setItem('uploadedPhotos', JSON.stringify(capturedPhotos));
     window.location.href = 'customize.html';
 });
 
-setupBoothDisplay();
+startCamera();

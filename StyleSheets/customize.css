@@ -29,54 +29,88 @@ h1 {
     margin-bottom: 0.5rem;
 }
 
-/* canvas and video */
-.countdown-timer {
-    top: 1rem;
-    padding: 1rem;
-    font-family: var(--main-font);
-    font-size: 5rem;
+h2 {
+    font-size: 2rem;
+    margin-top: 0rem;
+    margin-bottom: 0.5rem;
 }
 
-#live-video {
-    top: 100px;
-    left: 0;
-    width: 510px;   
-    height: 300px;
-    transform: scaleX(-1);
-    display: block;
-}
-
-#final-canvas {
-    display: none;
-}
-
-/* photo preview area */
-.photo-preview-container {
+/* photo selection layout */
+.customize-container {
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.photo-selection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.selectable-photos {
+    display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
     gap: 10px;
     justify-content: center;
-    margin-top: 20px;
-    padding-top: 0;
     max-width: 400px;
 }
 
-.preview-photo {
+.photo-wrapper {
+    border: 3px solid transparent;
+    border-radius: 6px;
+    padding: 2px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.photo-wrapper:hover:not(.placed) {
+    transform: scale(1.05);
+}
+
+.photo-wrapper.active {
+    border: 3px solid #2196F3;
+    box-shadow: 0 0 10px rgba(33, 150, 243, 0.5);
+}
+
+.photo-wrapper.placed {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.photo-wrapper.placed .selectable-photo {
+    border-color: #cb587f;
+}
+
+.selectable-photo {
     width: 170px;
     height: 100px;
     object-fit: cover;
+    border: 2px solid var(--main-text);
+    border-radius: 4px;
+    display: block;
 }
 
-/* photobooth display */
+.booth-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* frame display */
 .photobooth-container {
     position: relative;
     width: 180px;
     height: auto;
     display: inline-block;
-    margin: 2rem auto;
+    margin: 0;
 }
 
-.photo-slots { /* upload.html */
+.photo-slots {
     position: absolute;
     top: 10px;
     left: 0;
@@ -89,11 +123,10 @@ h1 {
     z-index: 1;
 }
 
-.photo-slot { /* upload.html */
-    width: 170px;      /* Setting specific width */
-    height: 100px;     /* Setting specific height */
-    flex: none;        
-    background-color: #f0f0f0;
+.photo-slot {
+    width: 170px;
+    height: 100px;
+    flex: none;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -101,13 +134,26 @@ h1 {
     border-radius: 4px;
 }
 
-.uploaded-photo { /* upload.html */
+.photo-slot.clickable {
+    cursor: pointer;
+    background-color: #f0f0f0;
+}
+
+.photo-slot.clickable:hover {
+    background-color: #e0e0e0;
+}
+
+.photo-slot.filled {
+    background-color: transparent;
+}
+
+.uploaded-photo {
     width: 100%;
     height: 100%;
     object-fit: stretch;
 }
 
-.frame-display { 
+.frame-display {
     position: relative;
     width: 180px;
     height: auto;
@@ -116,6 +162,7 @@ h1 {
     display: block;
 }
 
+/* controls */
 .controls {
     margin-top: 20px;
     margin-bottom: 20px;
@@ -124,20 +171,21 @@ h1 {
     justify-content: center;
 }
 
-/* buttons */
+/* button styling */
+.button-container {
+    margin-top: 0;
+}
+
 button {
     color: var(--main-text);
     font-family: var(--main-font);
-    font-size: 1.8rem;
+    font-size: 2rem;
     font-weight: 400;
     background-color: var(--white);
     border: 1px solid #1e1e1e;
     border-radius: 0.5rem;
     text-align: center;
     transition: transform 0.2s ease-in-out;
-    gap: 0.56rem;
-    width: 8rem;
-    height: 3rem;
     padding: 0.5rem 1rem;
 }
 
@@ -155,45 +203,12 @@ button:active {
     transform: scale(0.98);
 }
 
-/* custom alert box */
-.custom-alert-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
-.custom-alert-box {
+button:disabled:hover {
+    transform: scale(1);
     background-color: var(--white);
-    border: 2px solid var(--main-text);
-    border-radius: 1rem;
-    padding: 2rem;
-    max-width: 400px;
-    text-align: center;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-}
-
-.custom-alert-message {
-    font-family: var(--main-font);
-    font-size: 1.8rem;
-    color: var(--main-text);
-    margin: 0 0 1.5rem 0;
-}
-
-.custom-alert-button {
-    width: 6rem;
-    height: 2.5rem;
-    font-size: 1.5rem;
-}
-
-.custom-alert-image {
-    width: 120px;
-    height: auto;
-    margin-bottom: 1rem;
 }
