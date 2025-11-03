@@ -133,7 +133,7 @@ captureBtn.addEventListener('click', () => {
 //handler for ready button
 readyBtn.addEventListener('click', () => {
     sessionStorage.setItem('uploadedPhotos', JSON.stringify(capturedPhotos));
-    window.location.href = 'customize.html';
+    window.location.href ='layout.html';
 });
 
 startCamera();

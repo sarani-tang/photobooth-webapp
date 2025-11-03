@@ -1,0 +1,39 @@
+<!DOCTYPE>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Camera</title>
+        <link rel="stylesheet" href="StyleSheets/layout.css" />
+    </head>
+    <body>
+        <h1>Yay! Time to customize your photobooth strip!</h1>
+
+        <div class="customize-container">
+            <div class="photo-selection">
+                <h2>To add your photo, select your desired photo, then select the slot you'd like to place it.</h2>
+            </div>
+        </div>
+
+        <div class="booth-section">
+            <div class="selectable-photos" id="selectable-photos"></div>
+            <div class="photobooth-container" id="final-booth">
+                <div class="photo-slots">
+                    <div class="photo-slot" id="slot-0" data-slot="0"></div>
+                    <div class="photo-slot" id="slot-1" data-slot="1"></div>
+                    <div class="photo-slot" id="slot-2" data-slot="2"></div>
+                    <div class="photo-slot" id="slot-3" data-slot="3"></div>
+                </div>
+                <img id="frame-display" class="frame-display" src="" alt="Frame">
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="clear-button"><span>Clear Photos</span></button>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+        <script src="Javascripts/layout.js"></script>
+    </body>
+
+</html>

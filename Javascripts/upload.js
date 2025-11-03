@@ -131,7 +131,7 @@ if (uploadInput) {
 
 readyBtn.addEventListener('click', () => {
     sessionStorage.setItem('uploadedPhotos', JSON.stringify(uploadedPhotos));
-    window.location.href = 'customize.html';
+    window.location.href = 'stickers.html';
 });
 
 setupBoothDisplay();
