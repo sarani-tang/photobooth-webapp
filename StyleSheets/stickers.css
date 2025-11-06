@@ -24,92 +24,68 @@ body {
 }
 
 h1 {
-    font-size: 3rem;
+    font-size: 2.5rem;
     margin-top: 0rem;
-    margin-bottom: -1rem;
+    margin-bottom: 0.5rem;
 }
 
 h2 {
     font-size: 2rem;
-    margin-top: 0.5rem;
-    margin-bottom: 2rem;
+    margin-top: 0rem;
+    margin-bottom: 1rem;
+    text-align: center;
 }
 
-/* photo selection layout */
-.customize-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-top: 0;
-}
-
-.photo-selection {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-}
-
-.selectable-photos {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    margin-top: 15px;
-    gap: 10px;
-    justify-content: center;
-}
-
-.photo-wrapper {
-    border: 3px solid transparent;
-    border-radius: 6px;
-    padding: 2px;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-}
-
-.photo-wrapper:hover:not(.placed) {
-    transform: scale(1.05);
-}
-
-.photo-wrapper.active {
-    border: 3px solid #2196F3;
-    box-shadow: 0 0 10px rgba(33, 150, 243, 0.5);
-}
-
-.photo-wrapper.placed {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.photo-wrapper.placed .selectable-photo {
-    border-color: #ea6b6b;
-}
-
-.photo-wrapper.dragging {
-    opacity: 0.5;
-}
-
-.photo-slot.drag-over {
-    background-color: #a8d5ff;
-    border: 2px dashed #2196F3;
-}
-
-.selectable-photo {
-    width: 170px;
-    height: 100px;
-    object-fit: cover;
-    border: 2px solid var(--main-text);
-    border-radius: 4px;
-    display: block;
-}
-
-.booth-section {
+/* main layout */
+.main-container {
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
-    gap: 2rem;
+    gap: 3rem;
     justify-content: center;
+    align-items: flex-start;
+    margin-top: 2rem;
+}
+
+/* sticker palette */
+.sticker-palette {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 250px;
+}
+
+.sticker-selection {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+}
+
+.sticker-button {
+    font-size: 2rem;
+    width: 45px;
+    height: 45px;
+    background-color: var(--white);
+    border: 1px solid var(--main-text);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    padding: 0;
+}
+
+.sticker-button:hover {
+    transform: scale(1.1);
+    background-color: #f0f0f0;
+}
+
+.sticker-button:active {
+    transform: scale(0.95);
+}
+
+/* booth section */
+.booth-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* frame display */
@@ -135,8 +111,8 @@ h2 {
 }
 
 .photo-slot {
-    width: 170px;
-    height: 100px;
+    width: 190px;
+    height: 90px;
     flex: none;
     display: flex;
     justify-content: center;
@@ -144,26 +120,16 @@ h2 {
     overflow: hidden;
     border-radius: 4px;
     background-color: #f0f0f0;
-    cursor: pointer;
-}
-
-.photo-slot:hover {
-    background-color: #e0e0e0;
 }
 
 .photo-slot.filled {
     background-color: transparent;
-    cursor: default;
-}
-
-.photo-slot.filled:hover {
-    background-color: transparent;
 }
 
 .uploaded-photo {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    width: 170px;
+    height: 100px;
+    object-fit: contain;
 }
 
 .frame-display {
@@ -175,10 +141,37 @@ h2 {
     display: block;
 }
 
+/* sticker container (for placed stickers) */
+.sticker-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 4;
+    pointer-events: none;
+}
+
+.placed-sticker {
+    position: absolute;
+    font-size: 2rem;
+    cursor: grab;
+    user-select: none;
+    pointer-events: auto;
+    z-index: 5;
+    transition: transform 0.1s ease;
+}
+
+.placed-sticker:hover {
+    transform: scale(1.1);
+}
+
+.placed-sticker:active {
+    cursor: grabbing;
+}
+
 /* controls */
 .controls {
-    flex-direction: row;
-    align-items: center;
     margin-top: 20px;
     margin-bottom: 20px;
     display: flex;
@@ -187,10 +180,6 @@ h2 {
 }
 
 /* button styling */
-.button-container {
-    margin-top: 0;
-}
-
 button {
     color: var(--main-text);
     font-family: var(--main-font);

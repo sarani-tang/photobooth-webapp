@@ -2,12 +2,15 @@
 const selectedFrame = sessionStorage.getItem('selectedFrame');
 const uploadedPhotos = JSON.parse(sessionStorage.getItem('uploadedPhotos'));
 const selectPhotosContainer = document.getElementById('selectable-photos');
-const downloadBtn = document.getElementById('download-button');
-const againBtn = document.getElementById('again-button');
 const clearBtn = document.getElementById('clear-button');
+const nextBtn = document.getElementById('next-button');
+
+console.log('Selected Frame:', selectedFrame);
+console.log('Uploaded Photos:', uploadedPhotos);
 
 // redirect user if no data was received
 if (!selectedFrame || !uploadedPhotos) {
+    console.log('Redirecting - missing data');
     window.location.href = 'index.html';
 }
 
@@ -51,21 +54,22 @@ function customAlert(message, imageSrc = null) {
     document.body.appendChild(overlay);
 }
 
-// photo tracking for placing in slots
+// photo tracking
 let slotAssignments = [null, null, null, null];
-let selectedPhotoIndex = null;
+let dragPhoto = null;
 
 // frame display
 document.getElementById('frame-display').src = frameImg;
 document.getElementById('frame-display').alt = selectedFrame;
 
-// photobooth w/ selected photos display
-function displaySelectedPhotos() {
+// photobooth w/ selected photos display (drag n drop)
+function displayPhotos() {
     selectPhotosContainer.innerHTML = '';
 
     uploadedPhotos.forEach((photoData, index) => {
         const photoWrapper = document.createElement('div');
         photoWrapper.className = 'photo-wrapper';
+        photoWrapper.draggable = true;
         photoWrapper.dataset.photoIndex = index;
 
         const img = document.createElement('img');
@@ -73,13 +77,24 @@ function displaySelectedPhotos() {
         img.className = 'selectable-photo';
         img.alt = `Photo ${index + 1}`;
 
+        // checks if photo was placed 
         if(slotAssignments.includes(index)) {
             photoWrapper.classList.add('placed');
         }
 
-        photoWrapper.addEventListener('click', () => {
-            console.log("selected");
-            selectPhoto(index);
+        // manages drag feature
+        photoWrapper.addEventListener('dragstart', (e) => {
+            if (slotAssignments.includes(index)) {
+                e.preventDefault();
+                return;
+            }
+            dragPhoto = index;
+            photoWrapper.classList.add('dragging');
+        });
+
+        // drag and event
+        photoWrapper.addEventListener('dragend', (e) => {
+            photoWrapper.classList.remove('dragging');
         });
 
         photoWrapper.appendChild(img);
@@ -87,34 +102,47 @@ function displaySelectedPhotos() {
     });
 }
 
-// selecting photo function
-function selectPhoto(photoIndex) {
+// manages drop zones for slots
+function setupDropZones() {
+    document.querySelectorAll('.photo-slot').forEach(slot => {
+        // drag over event
+        slot.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            slot.classList.add('drag-over');
+        });
 
-    if(slotAssignments.includes(photoIndex)) {
-        return;
-    }
+        // drag leave event
+        slot.addEventListener('dragleave', (e) => {
+            slot.classList.remove('drag-over');
+        });
 
-    selectedPhotoIndex = photoIndex;
-    console.log(selectedPhotoIndex);
+        // drop event
+        slot.addEventListener('drop', (e) => {
+            e.preventDefault();
+            slot.classList.remove('drag-over');
 
-    document.querySelectorAll('.photo-wrapper').forEach(wrapper => {
-        wrapper.classList.remove('active');
+            if (dragPhoto !== null) {
+                const slotIndex = parseInt(slot.dataset.slot);
+                placePhotoInSlot(slotIndex, dragPhoto);
+                dragPhoto = null;
+            }
+        });
+
+        // click to remove photo from slot
+        slot.addEventListener('click', () => {
+            const slotIndex = parseInt(slot.dataset.slot);
+            if (slotAssignments[slotIndex] !== null) {
+                clearSlot(slotIndex);
+                displayPhotos();
+                checkIfComplete();
+            }
+        });
     });
-
-    const selectedWrapper = document.querySelector(`[data-photo-index="${photoIndex}"]`);
-    if (selectedWrapper && !selectedWrapper.classList.contains('placed')) {
-        selectedWrapper.classList.add('active');
-    }
 }
 
-// placing photo in slots
-function placePhotoSlot(slotIndex) {
-    if(selectedPhotoIndex === null) {
-        return;
-    }
-
-    // checks if the photo is already in another slot
-    const existingSlot = slotAssignments.indexOf(selectedPhotoIndex);
+// placing photo in a specific slot
+function placePhotoInSlot(slotIndex, photoIndex) {
+    const existingSlot = slotAssignments.indexOf(photoIndex);
     if(existingSlot !== -1) {
         clearSlot(existingSlot);
     }
@@ -124,23 +152,20 @@ function placePhotoSlot(slotIndex) {
         clearSlot(slotIndex);
     }
 
-    // place phot in slot
-    slotAssignments[slotIndex] = selectedPhotoIndex;
+    // place photo in slot
+    slotAssignments[slotIndex] = photoIndex;
     const slot = document.getElementById(`slot-${slotIndex}`);
     slot.innerHTML = '';
 
     const img = document.createElement('img');
-    img.src = uploadedPhotos[selectedPhotoIndex];
+    img.src = uploadedPhotos[photoIndex];
     img.className = 'uploaded-photo';
-    img.alt = `Photo ${selectedPhotoIndex + 1}`;
-    
+    img.alt = `Photo ${photoIndex + 1}`;
+
     slot.appendChild(img);
     slot.classList.add('filled');
-    slot.classList.remove('clickable');
-    
-    // deselect photo
-    selectedPhotoIndex = null;
-    displaySelectedPhotos();
+
+    displayPhotos();
     checkIfComplete();
 }
 
@@ -150,70 +175,38 @@ function clearSlot(slotIndex) {
     const slot = document.getElementById(`slot-${slotIndex}`);
     slot.innerHTML = '';
     slot.classList.remove('filled');
-    slot.classList.add('clickable');
 }
 
 // check if all slots are filled
 function checkIfComplete() {
     const allFilled = slotAssignments.every(slot => slot !== null);
-    downloadBtn.disabled = !allFilled;
+    nextBtn.disabled = !allFilled;
 }
 
-// setup slot click handlers
-document.querySelectorAll('.photo-slot').forEach(slot => {
-    slot.addEventListener('click', () => {
-        const slotIndex = parseInt(slot.dataset.slot);
-        
-        if (selectedPhotoIndex !== null) {
-            placePhotoSlot(slotIndex);
-        } else if (slotAssignments[slotIndex] !== null) {
-            // if clicking a filled slot with no photo selected, clear it
-            clearSlot(slotIndex);
-            displaySelectedPhotos();
-            checkIfComplete();
-        }
-    });
-});
-
-// clear all slots
+// clear all slots button
 clearBtn.addEventListener('click', () => {
     slotAssignments = [null, null, null, null];
     document.querySelectorAll('.photo-slot').forEach((slot, index) => {
         clearSlot(index);
     });
-    selectedPhotoIndex = null;
-    displaySelectedPhotos();
+    displayPhotos();
     checkIfComplete();
 });
 
-// download functionality
-downloadBtn.addEventListener('click', async () => {
-    const boothContainer = document.getElementById('final-booth');
-
-    try {
-        const canvas = await html2canvas(boothContainer, {
-            backgroundColor: '#ffffff',
-            scale: 2,
-            logging: false,
-            useCORS: true
-        });
-
-        const link = document.createElement('a');
-        link.download = 'photobooth-strip.png';
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-    } catch (error) {
-        console.error('Download failed:', error);
-        customeAlert('Download failed. Please try again.', 'Assets/Images/sad-cat.jpg')
+// next button
+nextBtn.addEventListener('click', () => {
+    if (slotAssignments.includes(null)) {
+        customAlert('You forgot some photos!', 'Assets/Images/screaming-cat.jpg');
+        return;
     }
-});
 
-// do another photobooth
-againBtn.addEventListener('click', () => {
-    sessionStorage.clear();
-    window.location.href = 'index.html';
+    // saves order of photos to session storage
+    const orderedPhotos = slotAssignments.map(index => uploadedPhotos[index]);
+    sessionStorage.setItem('orderedPhotos', JSON.stringify(orderedPhotos));
+    window.location.href = 'stickers.html';
 });
 
 // initialize
-displaySelectedPhotos();
+displayPhotos();
+setupDropZones();
 checkIfComplete();

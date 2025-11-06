@@ -5,15 +5,42 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Stickers</title>
 
-        <link rel="stylesheet" href="StyleSheets/layout.css" />
+        <link rel="stylesheet" href="StyleSheets/stickers.css" />
     </head>
     <body>
-        <h1>this is the stickers page!!!!!</h1>
+        <h1>Add some stickers!</h1>
 
-        <button id="download-button"><span>Download</span></button>
-        <button id="again-button"><span>Do Another!</span></button>
+        <div class="main-container">
+            <div class="sticker-choices">
+                <h2>Double tap to remove</h2>
+                <div id="sticker-selection" class="sticker-selection">
+                    <!-- stickers loaded here -->
+                </div>
+            </div>
 
-        <script src="Javascripts/layout.js"></script>
+            <div class="booth-section">
+                <div class="photobooth-container" id="final-booth">
+                    <div class="photo-slots">
+                        <div class="photo-slot" id="slot-0" data-slot="0"></div>
+                        <div class="photo-slot" id="slot-1" data-slot="1"></div>
+                        <div class="photo-slot" id="slot-2" data-slot="2"></div>
+                        <div class="photo-slot" id="slot-3" data-slot="3"></div>
+                    </div>
+                    <img id="frame-display" class="frame-display" src="" alt="Frame">
+                    <div id="sticker-container" class="sticker-container">
+                        <!-- Placed stickers will go here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="download-button"><span>Download</span></button>
+            <button id="again-button"><span>Do Another!</span></button>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+        <script src="Javascripts/stickers.js"></script>
     </body>
 
 </html>
