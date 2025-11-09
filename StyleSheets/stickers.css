@@ -100,8 +100,8 @@ h2 {
 .photo-slots {
     position: absolute;
     top: 10px;
-    left: 0;
-    width: 100%;
+    left: 10;
+    width: 170px;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -111,8 +111,8 @@ h2 {
 }
 
 .photo-slot {
-    width: 190px;
-    height: 90px;
+    width: 150px;
+    height: 100px;
     flex: none;
     display: flex;
     justify-content: center;
@@ -120,16 +120,26 @@ h2 {
     overflow: hidden;
     border-radius: 4px;
     background-color: #f0f0f0;
+    cursor: pointer;
 }
 
 .photo-slot.filled {
     background-color: transparent;
 }
 
+/*
 .uploaded-photo {
-    width: 170px;
+    width: 150px;
     height: 100px;
     object-fit: contain;
+    object-position: left center;
+}
+*/
+
+.uploaded-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .frame-display {

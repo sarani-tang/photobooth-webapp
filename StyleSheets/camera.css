@@ -40,7 +40,7 @@ h1 {
 #live-video {
     top: 100px;
     left: 0;
-    width: 500px;   
+    width: 450px;   
     height: 300px;
     transform: scaleX(-1);
     display: block;
@@ -62,9 +62,9 @@ h1 {
 }
 
 .preview-photo {
-    width: 170px;
+    width: 150px;
     height: 100px;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 /* photobooth display */
@@ -90,7 +90,7 @@ h1 {
 }
 
 .photo-slot { /* upload.html */
-    width: 170px;      /* Setting specific width */
+    width: 150px;      /* Setting specific width */
     height: 100px;     /* Setting specific height */
     flex: none;        
     background-color: #f0f0f0;
